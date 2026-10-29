@@ -1,0 +1,1 @@
+import { NextResponse } from 'next/server'; import { getDb } from '@/src/lib/db'; import { ensureSeeded } from '@/src/lib/repository'; export const dynamic='force-dynamic'; export async function GET(){ensureSeeded();return NextResponse.json({users:getDb().prepare('SELECT id,name,email,role,institution_id,active,created_at FROM users ORDER BY role,name').all()})}

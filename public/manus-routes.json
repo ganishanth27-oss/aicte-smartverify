@@ -1,0 +1,24 @@
+{
+  "routes": [
+    {"path":"/","title":"SmartVerify"},
+    {"path":"/dashboard","title":"Dashboard redirect"},
+    {"path":"/government","title":"Government dashboard"},
+    {"path":"/institution","title":"Institution dashboard"},
+    {"path":"/public","title":"Public grievance portal"},
+    {"path":"/government/complaints","title":"Government complaint monitoring"},
+    {"path":"/login","title":"Login"},
+    {"path":"/applications","title":"Applications"},
+    {"path":"/applications/new","title":"New application"},
+    {"path":"/applications/:id","title":"Application detail"},
+    {"path":"/documents","title":"Document workspace"},
+    {"path":"/findings","title":"Findings"},
+    {"path":"/verification","title":"Issuer verification"},
+    {"path":"/rules","title":"Regulatory rules"},
+    {"path":"/infrastructure","title":"Infrastructure"},
+    {"path":"/review","title":"Officer review"},
+    {"path":"/audit","title":"Audit trail"},
+    {"path":"/reports","title":"Reports and exports"},
+    {"path":"/users","title":"Users and roles"},
+    {"path":"/settings","title":"Settings"}
+  ]
+}

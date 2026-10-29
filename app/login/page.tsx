@@ -1,0 +1,18 @@
+'use client';
+import { useEffect, useState } from 'react';
+import { ArrowRight, Building2, ChevronRight, ShieldCheck, Users } from 'lucide-react';
+import { roles, type Role } from '@/src/lib/types';
+import { api } from '@/components/ui';
+import { useRouter } from 'next/navigation';
+import Link from 'next/link';
+
+const supportRoles = roles.filter((role) => !['Institution Applicant', 'AICTE Officer/Reviewer'].includes(role));
+
+export default function LoginPage() {
+  const router = useRouter();
+  const [selected, setSelected] = useState<Role>('AICTE Officer/Reviewer');
+  const [busy, setBusy] = useState(false);
+  useEffect(() => { fetch('/api/session').then((r) => r.json()).then((d) => { if (d.user) router.replace('/dashboard'); }); }, [router]);
+  async function enter(role = selected) { setBusy(true); try { await api('/api/session', { method: 'POST', body: JSON.stringify({ role }) }); router.push(role === 'Institution Applicant' ? '/institution' : '/government'); } finally { setBusy(false); } }
+  return <div className="login-page"><section className="login-visual"><div className="brand"><span className="brand-mark"/><span><h1>SmartVerify</h1><p>Institutional review cockpit</p></span></div><div><h1>Evidence-led review for accountable decisions.</h1><p>Choose the workspace that matches your role. Institution users track their submissions, while government reviewers assess evidence, findings, and workflow queues.</p></div><div className="small mono" style={{ color: '#84b2c8' }}>SIMULATION MODE / SYNTHETIC RECORDS</div></section><section className="login-card"><div className="login-box"><div className="eyebrow">Local evaluation access</div><h2>Choose your dashboard</h2><p className="login-intro">Select a clear entry point below. This role selector is only for the synthetic local environment; production authentication must use an authorized identity provider.</p><Link href="/public" className="public-login-link">Public Grievance Portal <ArrowRight size={13}/></Link><div className="dashboard-choice-grid"><button className="dashboard-entry dashboard-entry-user" onClick={() => enter('Institution Applicant')} disabled={busy}><span className="dashboard-entry-icon"><Building2 size={22}/></span><span className="dashboard-entry-copy"><strong>Institution user</strong><small>Submit applications, upload evidence, view findings, and track rectification requests.</small><em>Rohan Kulkarni · Riverbend College</em></span><ChevronRight size={18}/></button><button className="dashboard-entry dashboard-entry-government" onClick={() => enter('AICTE Officer/Reviewer')} disabled={busy}><span className="dashboard-entry-icon"><ShieldCheck size={22}/></span><span className="dashboard-entry-copy"><strong>Government dashboard</strong><small>Review all synthetic applications, validate evidence, inspect anomalies, and record officer workflow.</small><em>Ananya Rao · AICTE Officer/Reviewer</em></span><ChevronRight size={18}/></button></div><div className="login-divider"><span>Other demo roles</span></div><div className="support-role-row"><Users size={16} color="var(--teal-dark)"/><select className="select" value={selected} onChange={(e) => setSelected(e.target.value as Role)}>{supportRoles.map((role) => <option key={role}>{role}</option>)}</select><button className="btn" onClick={() => enter(selected)} disabled={busy}>Enter <ArrowRight size={14}/></button></div><div className="notice" style={{ marginTop: 18 }}>All records are fictional. Issuer responses and institutional comparisons are marked simulated throughout the application and exports.</div></div></section></div>;
+}

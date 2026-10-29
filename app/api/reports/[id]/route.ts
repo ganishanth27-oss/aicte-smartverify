@@ -1,0 +1,5 @@
+import { NextResponse } from 'next/server';
+import { ensureSeeded, reportCsv, reportData, reportPdf } from '@/src/lib/repository';
+
+export const dynamic = 'force-dynamic';
+export async function GET(request: Request, context: { params: Promise<{ id: string }> }) { ensureSeeded(); const { id } = await context.params; const format = new URL(request.url).searchParams.get('format'); if (format === 'csv') { const csv = reportCsv(id); return csv ? new Response(csv, { headers: { 'Content-Type': 'text/csv; charset=utf-8', 'Content-Disposition': `attachment; filename="${id}-report.csv"` } }) : NextResponse.json({ error: 'Application not found' }, { status: 404 }); } if (format === 'pdf') { const pdf = reportPdf(id); return pdf ? new Response(pdf, { headers: { 'Content-Type': 'application/pdf', 'Content-Disposition': `attachment; filename="${id}-report.pdf"` } }) : NextResponse.json({ error: 'Application not found' }, { status: 404 }); } const report = reportData(id); return report ? NextResponse.json(report) : NextResponse.json({ error: 'Application not found' }, { status: 404 }); }
